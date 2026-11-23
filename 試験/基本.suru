@@ -1,0 +1,85 @@
+「試験」 を 読み込んで 使う
+「ファイル」 を 読み込む
+「標準」 を 読み込んで 使う
+「SQLite」 を 読み込んで 使う
+
+SQL値 の リスト を 行文字列にする は 文字列
+行 を 行文字列にする とは 行 の それぞれ を SQL値文字列にして 「 | 」 で 結合する
+
+表準備する は SQLite接続 の 動作
+表準備する とは 手順
+  db とは 「:memory:」 を SQLite開封した 結果
+  db に 「CREATE TABLE 人 (id INTEGER PRIMARY KEY, 名前 TEXT, 点 REAL, 写真 BLOB); INSERT INTO 人 (名前, 点) VALUES ('花子', 90.5)」 を SQLite実行する
+  db を 結果にする
+
+実行試験する は 数 の 動作
+実行試験する とは 手順
+  db とは 表準備した 結果
+  n とは db に 「INSERT INTO 人 (名前) VALUES ('a'); INSERT INTO 人 (名前) VALUES ('b')」 を SQLite実行した 結果
+  n を 1 に 一致確認する
+  （db を SQLite最終行番号取得した 結果） を 3 に 一致確認する
+  （db に 「UPDATE 人 SET 点 = 1」 を SQLite実行した 結果） を 3 に 一致確認する
+  db を SQLite閉鎖する
+
+差込試験する は 数 の 動作
+差込試験する とは 手順
+  db とは 表準備した 結果
+  写真 とは （1 と 2 と 255） を バイト列組立する
+  名 とは 「改行」 + 改行 + 「と'引用'」
+  db に 「INSERT INTO 人 (名前, 点, 写真) VALUES (?, ?, ?)」 を （（「太郎」 の SQL文字列） と （72 の SQL数） と （写真 の SQLバイト列）） で SQLite差込実行する
+  db に 「INSERT INTO 人 (名前, 点, 写真) VALUES (?, ?, ?)」 を （（名 の SQL文字列） と SQL無 と （（空 を バイト列組立する） の SQLバイト列）） で SQLite差込実行する
+  行群 とは db に 「SELECT * FROM 人 ORDER BY id」 を SQLite問合した 結果
+  （行群 の それぞれ を 行文字列にする） を （「1 | 花子 | 90.5 | NULL」 と 「2 | 太郎 | 72 | バイト列(3バイト)」 と （「3 | 」 + 名 + 「 | NULL | バイト列(0バイト)」）） に 一致確認する
+  （（行群 から 2 を 番目取得する） から 4 を 番目取得する） を 写真 の SQLバイト列 に 一致確認する
+  選んだ とは db に 「SELECT 名前, typeof(点) FROM 人 WHERE 点 > ?」 を （（80 の SQL数） を 空 に 挿入する） で SQLite差込問合した 結果
+  選んだ を （（（「花子」 の SQL文字列） と （「real」 の SQL文字列）） を 空 に 挿入する） に 一致確認する
+  db を SQLite閉鎖する
+
+値の型試験する は 数 の 動作
+値の型試験する とは 手順
+  db とは 「:memory:」 を SQLite開封した 結果
+  行群 とは db に 「SELECT 3, 164.5, NULL, x'', -3, 'あ'」 を SQLite問合した 結果
+  行群 を （（（3 の SQL数） と （164.5 の SQL数） と SQL無 と （（空 を バイト列組立する） の SQLバイト列） と （-3 の SQL数） と （「あ」 の SQL文字列）） を 空 に 挿入する） に 一致確認する
+  （db に 「SELECT 1 WHERE 0」 を SQLite問合した 結果） を 空 に 一致確認する
+  （db に 「SELECT 1 AS 番号, 2 AS 名前」 を SQLite列名取得した 結果） を （「番号」 と 「名前」） に 一致確認する
+  db を SQLite閉鎖する
+
+多い行試験する は 数 の 動作
+多い行試験する とは 手順
+  db とは 「:memory:」 を SQLite開封した 結果
+  数群 とは db に 「WITH RECURSIVE c(x) AS (SELECT 1 UNION ALL SELECT x + 1 FROM c WHERE x < 5000) SELECT x FROM c」 を SQLite問合した 結果
+  数群 の 長さ を 5000 に 一致確認する
+  数群 の 最後 を （（5000 の SQL数） を 空 に 挿入する） に 一致確認する
+  db を SQLite閉鎖する
+
+失敗試験する は 数 の 動作
+失敗試験する とは 手順
+  db とは 表準備した 結果
+  a とは （db に 「SELEC 1」 を SQLite問合する） を （空 を 結果にする） で 試行した 結果
+  a を 空 に 一致確認する
+  b とは （db に 「INSERT INTO 無い表 VALUES (1)」 を SQLite実行する） を （-1 を 結果にする） で 試行した 結果
+  b を -1 に 一致確認する
+  c とは （db に 「SELECT 1」 を （（1 の SQL数） を 空 に 挿入する） で SQLite差込問合する） を （空 を 結果にする） で 試行した 結果
+  c を 空 に 一致確認する
+  d とは （db に 「」 を SQLite問合する） を （空 を 結果にする） で 試行した 結果
+  d を 空 に 一致確認する
+  # 失敗の後も同じ接続が使える
+  （db に 「SELECT count(*) FROM 人」 を SQLite問合した 結果） を （（（1 の SQL数） を 空 に 挿入する） を 空 に 挿入する） に 一致確認する
+  db を SQLite閉鎖する
+
+開けない試験する は 真偽 の 動作
+開けない試験する とは 手順
+  r とは （（「/存在しない/フォルダ/a.db」 を SQLite開封する） を （r を 受け取って 0 を 返すこと） で 写像する） を （1 を 結果にする） で 試行した 結果
+  r を 1 に 一致確認する
+
+ファイル試験する は 数 の 動作
+ファイル試験する とは 手順
+  道 とは 「出力/試験用.db」
+  （道 を ファイル内の削除する） を （0 を 結果にする） で 試行する
+  db とは 道 を SQLite開封した 結果
+  db に 「CREATE TABLE 記録 (文 TEXT)」 を SQLite実行する
+  db に 「INSERT INTO 記録 VALUES (?)」 を （（「残る」 の SQL文字列） を 空 に 挿入する） で SQLite差込実行する
+  db を SQLite閉鎖する
+  db2 とは 道 を SQLite開封した 結果
+  （db2 に 「SELECT 文 FROM 記録」 を SQLite問合した 結果） を （（（「残る」 の SQL文字列） を 空 に 挿入する） を 空 に 挿入する） に 一致確認する
+  db2 を SQLite閉鎖する

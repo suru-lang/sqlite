@@ -1,0 +1,4 @@
+名前 とは 「SQLite」
+版 とは 「0.1.0」
+外部依存 とは 「sqlite3@3.7.15」
+導入案内 とは 「macOS: brew install sqlite して export PKG_CONFIG_PATH="$(brew --prefix sqlite)/lib/pkgconfig"」 と 「Debian・Ubuntu: sudo apt install libsqlite3-dev」 と 「Fedora: sudo dnf install sqlite-devel」
