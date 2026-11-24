@@ -2,13 +2,13 @@
 「SQLite」 を 読み込んで 使う
 「標準」 を 読み込んで 使う
 
-SQL値 の リスト を 行文字列にする は 文字列
+SQL値 の リスト を 行文字列にする は 文字列 を 返す
 行 を 行文字列にする とは 行 の それぞれ を SQL値文字列にして 「 | 」 で 結合する
 
-文字列 を 数 で SQLite接続 に 品登録する は 数 の 動作
+文字列 を 数 で SQLite接続 に 品登録する は 数 を 返す 入出力動作
 名 を 値段 で db に 品登録する とは db に 「INSERT INTO 品 (名前, 値段) VALUES (?, ?)」 を （（名 の SQL文字列） と （値段 の SQL数）） で SQLite差込実行する
 
-主処理する とは 手順
+主処理する とは 入出力手順
   db とは 「:memory:」 を SQLite開封した 結果
   db に 「CREATE TABLE 品 (id INTEGER PRIMARY KEY, 名前 TEXT NOT NULL, 値段 REAL)」 を SQLite実行する
   「りんご」 を 120 で db に 品登録する
