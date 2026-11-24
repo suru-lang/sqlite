@@ -23,7 +23,7 @@ kumu 追加 github.com/suru-lang/sqlite
 ```
 「SQLite」 を 読み込んで 使う
 
-主処理する とは 手順
+主処理する とは 入出力手順
   db とは 「店.db」 を SQLite開封した 結果
   db に 「CREATE TABLE IF NOT EXISTS 品 (名前 TEXT, 値段 REAL)」 を SQLite実行する
   db に 「INSERT INTO 品 VALUES (?, ?)」 を （（「りんご」 の SQL文字列） と （120 の SQL数）） で SQLite差込実行する
