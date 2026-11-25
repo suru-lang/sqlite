@@ -1,24 +1,26 @@
-# SQLite(する のライブラリ)
+English | [日本語](README_jp.md)
 
-日本語のプログラミング言語「[する](https://github.com/suru-lang/suru)」から SQLite のデータベースを使うライブラリです。libsqlite3 を外部の関数として呼びます。
+# SQLite (a library for Suru)
 
-## 入れ方
+A library for using SQLite databases from [Suru (「する」)](https://github.com/suru-lang/suru), a programming language in Japanese. It calls libsqlite3 as foreign functions.
 
-[kumu](https://github.com/suru-lang/suru#プロジェクトを組むkumu) のプロジェクトで:
+## Installing
+
+In a [kumu](https://github.com/suru-lang/suru#building-projects-kumu) project:
 
 ```sh
 kumu 追加 github.com/suru-lang/sqlite
 ```
 
-システムに libsqlite3 が要ります(組.suru の `外部依存`。無ければ kumu が入れ方を出して止まります)。
+libsqlite3 is required on the system (the `外部依存` in 組.suru; if it is missing, kumu shows how to install it and stops).
 
-- macOS: `brew install sqlite` して `export PKG_CONFIG_PATH="$(brew --prefix sqlite)/lib/pkgconfig"`(macOS にも libsqlite3 は入っていますが、kumu が確かめに使う pkg-config の .pc ファイルがありません)
-- Debian・Ubuntu: `sudo apt install libsqlite3-dev`
+- macOS: `brew install sqlite`, then `export PKG_CONFIG_PATH="$(brew --prefix sqlite)/lib/pkgconfig"` (macOS ships libsqlite3 too, but not the pkg-config .pc file kumu uses to check for it)
+- Debian, Ubuntu: `sudo apt install libsqlite3-dev`
 - Fedora: `sudo dnf install sqlite-devel`
 
-する 本体は、外部依存(suru-lang/suru#88)と負の数の番地(suru-lang/suru#85)が入った版が要ります。
+Suru itself must be a version that includes external dependencies (suru-lang/suru#88) and negative addresses (suru-lang/suru#85).
 
-## 使い方
+## Usage
 
 ```
 「SQLite」 を 読み込んで 使う
@@ -34,32 +36,32 @@ kumu 追加 github.com/suru-lang/sqlite
 主処理する
 ```
 
-名前はどれも `SQL` か `SQLite` で始まります。`「SQLite」 を 読み込む` なら `SQLite内のSQLite開封する` のように書きます。例は [例/店.suru](例/店.suru) です。
+Every name starts with `SQL` or `SQLite`. With `「SQLite」 を 読み込む`, write them with the prefix, as in `SQLite内のSQLite開封する`. An example is [例/店.suru](例/店.suru).
 
-## 決めたこと
+## Decisions
 
-1. **開く・閉じる。** `道 を SQLite開封する` はファイルのデータベースを開き(なければ作る)、接続(`SQLite接続`)を結果にします。`「:memory:」` ならメモリの中だけのデータベースです。`db を SQLite閉鎖する` で閉じます。どれも動作です。
-2. **値は選択肢のある型 `SQL値`。** `SQL無`(NULL)、`42 の SQL数`(整数なら INTEGER、小数なら REAL として入れる)、`「a」 の SQL文字列`(TEXT)、`b の SQLバイト列`(BLOB)です。読んだ値もこの型で、パターンマッチで取り出せます。`v を SQL値文字列にする` は表示のための文字列(`SQL無` は「NULL」)です。
-3. **実行する・問い合わせる。** `db に 文 を SQLite実行する` は結果の行のない SQL を実行して、変わった行の数を結果にします(「;」で区切って何文でも書けます)。`db に 文 を SQLite問合する` は結果の行のリストで、1行は `SQL値` のリスト(列の順)です。`db に 文 を SQLite列名取得する` は列の名前のリスト、`db を SQLite最終行番号取得する` は最後に入れた行の rowid です。トランザクションは `「BEGIN」`・`「COMMIT」` を SQLite実行する で書きます。
-4. **値は「?」に入れる。** `SQLite差込実行する`・`SQLite差込問合する` は、文の「?」に値群(`SQL値` のリスト)を前から順に入れます。SQLite が値として受け取るので、文字列に引用符が入っていても SQL を壊しません。人の入力を SQL に使うときは、文字列を `+` でつながずに、こちらを使います。
-5. **失敗は実行時エラー。** 「SQLite で『SELEC 1』を実行するのに失敗しました(near "SELEC": syntax error)」のように、SQLite の理由を付けた実行時エラーになります(`試行する` で受け止められます)。失敗しても、準備した文は片付けます。
-6. **たくさんの行も読める。** 行は手順の終わりでの繰り返しで集めるので、何千行でも深くなりません。
+1. **Opening and closing.** `道 を SQLite開封する` opens a database file (creating it if absent) and gives a connection (`SQLite接続`). `「:memory:」` gives a database only in memory. `db を SQLite閉鎖する` closes it. All of these are actions.
+2. **Values have the type with alternatives `SQL値`.** `SQL無` (NULL), `42 の SQL数` (stored as INTEGER if an integer, REAL if a decimal), `「a」 の SQL文字列` (TEXT) and `b の SQLバイト列` (BLOB). Values read back have this type too and can be taken apart with pattern matching. `v を SQL値文字列にする` is a string for display (「NULL」 for `SQL無`).
+3. **Executing and querying.** `db に 文 を SQLite実行する` runs SQL without result rows and gives the number of changed rows (any number of statements separated by 「;」). `db に 文 を SQLite問合する` gives the list of result rows, each row a list of `SQL値` (in column order). `db に 文 を SQLite列名取得する` gives the list of column names, and `db を SQLite最終行番号取得する` the rowid of the last inserted row. Transactions are written by running `「BEGIN」` and `「COMMIT」` with SQLite実行する.
+4. **Values go into 「?」.** `SQLite差込実行する` and `SQLite差込問合する` put the values (a list of `SQL値`) into the statement's 「?」 in order from the front. SQLite receives them as values, so quotes inside strings can't break the SQL. When using people's input in SQL, use these instead of joining strings with `+`.
+5. **Failures are runtime errors.** They are runtime errors with SQLite's reason, like 「SQLite で『SELEC 1』を実行するのに失敗しました(near "SELEC": syntax error)」 ("failed to run 『SELEC 1』 in SQLite (…)") (catchable with `試行する`). Prepared statements are cleaned up even on failure.
+6. **Many rows can be read.** Rows are collected by a loop at the end of a procedure, so thousands of rows don't make it deep.
 
-## 試験
+## Tests
 
 ```sh
 kumu 試験
 kumu 点検
 ```
 
-## 今後の候補
+## Future work
 
-- 行を列の名前で引けるようにする(列名と値の組や、「表」で1行を返す問い合わせ)
-- トランザクションを包む関数(手順を渡して、失敗したら ROLLBACK する)
-- 準備した文を何度も使う(同じ INSERT をたくさん行うときに速くする)
-- 「?」のほかに「:名前」の名前つきの差し込み
-- 大きな結果を1行ずつ読む(全部をリストにしないで畳み込む)
+- Look rows up by column name (records of column names and values, or queries returning one row as a 「表」)
+- A function wrapping transactions (pass a procedure; ROLLBACK on failure)
+- Reuse prepared statements (to speed up running the same INSERT many times)
+- Named placeholders 「:名前」 in addition to 「?」
+- Read large results one row at a time (fold without making a list of everything)
 
-## ライセンス
+## License
 
 [MIT](LICENSE)
