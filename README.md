@@ -25,13 +25,14 @@ Suru itself must be a version that includes external dependencies (suru-lang/sur
 ```
 「SQLite」 を 読み込んで 使う
 
-主処理する とは 入出力手順
+主処理する とは 以下の入出力手順です
   db とは 「店.db」 を SQLite開封した 結果
   db に 「CREATE TABLE IF NOT EXISTS 品 (名前 TEXT, 値段 REAL)」 を SQLite実行する
   db に 「INSERT INTO 品 VALUES (?, ?)」 を （（「りんご」 の SQL文字列） と （120 の SQL数）） で SQLite差込実行する
   行群 とは db に 「SELECT 名前 FROM 品 WHERE 値段 < ?」 を （（200 の SQL数） を 空 に 挿入する） で SQLite差込問合した 結果
   行群 を 表示する
   db を SQLite閉鎖する
+  以上です
 
 主処理する
 ```
