@@ -1,4 +1,4 @@
-# kumu 試験 と kumu 点検 を、Linux と macOS で動かします
+# kumu 試験 と kumu 点検 を、Linux と macOS と Windows(MSYS2)で動かします
 name: 試験
 
 on:
@@ -34,3 +34,37 @@ jobs:
         run: ~/go/bin/kumu 試験
       - name: 点検
         run: ~/go/bin/kumu 点検
+
+  # Windows では MSYS2 の UCRT64(clang・lld・Go・pkg-config・SQLite)で作る。lld は日本語の道(出力/)に書くのに要る
+  windows:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          update: true
+          install: >-
+            git
+            mingw-w64-ucrt-x86_64-clang
+            mingw-w64-ucrt-x86_64-lld
+            mingw-w64-ucrt-x86_64-go
+            mingw-w64-ucrt-x86_64-pkgconf
+            mingw-w64-ucrt-x86_64-sqlite3
+      - name: kumu を入れる
+        env:
+          GOPROXY: direct
+          # main を足したすぐ後は、sum.golang.org がまだその版を知らないことがある
+          GONOSUMDB: github.com/suru-lang/*
+        run: go install github.com/suru-lang/suru/cmd/kumu@main
+      - name: 試験
+        run: |
+          export PATH="$(cygpath -u "$(go env GOPATH)")/bin:$PATH"
+          kumu 試験
+      - name: 点検
+        run: |
+          export PATH="$(cygpath -u "$(go env GOPATH)")/bin:$PATH"
+          kumu 点検
