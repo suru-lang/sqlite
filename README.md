@@ -19,7 +19,7 @@ The database layer [「蔵」](https://github.com/suru-lang/db) (suru-lang/db) c
 - Fedora: `sudo dnf install sqlite-devel`
 - Windows (MSYS2 UCRT64): `pacman -S mingw-w64-ucrt-x86_64-sqlite3`. Use the UCRT64 shell with clang, lld and pkgconf (`pacman -S mingw-w64-ucrt-x86_64-clang mingw-w64-ucrt-x86_64-lld mingw-w64-ucrt-x86_64-pkgconf`) and Suru 0.8.0 or later (the first release with Windows support)
 
-Suru 0.9.0 or later is required (the library writes procedures with 「以下の手順です … 以上です」 and its C functions with 「以下の外部の入出力動作です … 以上です」).
+Suru 0.9.1 or later is required (the library writes procedures with 「以下の手順です … 以上です」 and its C functions with 「以下は外部の入出力動作です … 以上です」).
 
 ## Usage
 
