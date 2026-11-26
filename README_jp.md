@@ -19,7 +19,7 @@ kumu 追加 github.com/suru-lang/sqlite
 - Fedora: `sudo dnf install sqlite-devel`
 - Windows(MSYS2 の UCRT64): `pacman -S mingw-w64-ucrt-x86_64-sqlite3`。UCRT64 のシェルで clang・lld・pkgconf(`pacman -S mingw-w64-ucrt-x86_64-clang mingw-w64-ucrt-x86_64-lld mingw-w64-ucrt-x86_64-pkgconf`)と、する 0.8.0 以上(Windows に対応した最初の版)を使います
 
-する 本体は 0.7.0 以上が要ります(ライブラリが手順を「以下の手順です … 以上です」で書くため)。
+する 本体は 0.9.0 以上が要ります(ライブラリが手順を「以下の手順です … 以上です」で、C の関数を「以下の外部の入出力動作です … 以上です」で書くため)。
 
 ## 使い方
 
