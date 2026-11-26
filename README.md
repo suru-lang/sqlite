@@ -57,6 +57,8 @@ kumu 試験
 kumu 点検
 ```
 
+CI runs them on Linux, macOS and Windows (MSYS2).
+
 ## Future work
 
 - Reuse prepared statements (to speed up running the same INSERT many times)

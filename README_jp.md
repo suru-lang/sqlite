@@ -57,6 +57,8 @@ kumu 試験
 kumu 点検
 ```
 
+CI では Linux・macOS・Windows(MSYS2)で動かします。
+
 ## 今後の候補
 
 - 準備した文を何度も使う(同じ INSERT をたくさん行うときに速くする)
