@@ -18,7 +18,7 @@ The database layer [「蔵」](https://github.com/suru-lang/db) (suru-lang/db) c
 - Debian, Ubuntu: `sudo apt install libsqlite3-dev`
 - Fedora: `sudo dnf install sqlite-devel`
 
-Suru itself must be a version that includes external dependencies (suru-lang/suru#88) and negative addresses (suru-lang/suru#85).
+Suru 0.7.0 or later is required (the library writes procedures with 「以下の手順です … 以上です」).
 
 ## Usage
 

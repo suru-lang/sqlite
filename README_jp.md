@@ -18,7 +18,7 @@ kumu 追加 github.com/suru-lang/sqlite
 - Debian・Ubuntu: `sudo apt install libsqlite3-dev`
 - Fedora: `sudo dnf install sqlite-devel`
 
-する 本体は、外部依存(suru-lang/suru#88)と負の数の番地(suru-lang/suru#85)が入った版が要ります。
+する 本体は 0.7.0 以上が要ります(ライブラリが手順を「以下の手順です … 以上です」で書くため)。
 
 ## 使い方
 
