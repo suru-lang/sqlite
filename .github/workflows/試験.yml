@@ -57,7 +57,7 @@ jobs:
       - name: kumu を入れる
         env:
           GOPROXY: direct
-        run: go install github.com/suru-lang/suru/cmd/kumu@ff847e8aa6e374b95635497b032d5788b50c44cb
+        run: go install github.com/suru-lang/suru/cmd/kumu@main
       - name: 試験
         run: |
           export PATH="$(cygpath -u "$(go env GOPATH)")/bin:$PATH"
