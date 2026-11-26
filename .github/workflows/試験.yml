@@ -57,6 +57,8 @@ jobs:
       - name: kumu を入れる
         env:
           GOPROXY: direct
+          # main を足したすぐ後は、sum.golang.org がまだその版を知らないことがある
+          GONOSUMDB: github.com/suru-lang/*
         run: go install github.com/suru-lang/suru/cmd/kumu@main
       - name: 試験
         run: |
