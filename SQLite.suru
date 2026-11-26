@@ -36,58 +36,36 @@ SQLite接続 とは SQLite場所 と SQLite道 の 組
 
 # --- C の関数 ---
 
-数 を 確保する は 番地 の 動作
-n を 確保する とは 外部の「malloc」
-番地 を 解放する は 無 の 動作
-p を 解放する とは 外部の「free」
+以下の外部の入出力動作です
+  数 を 確保する は 「malloc」 で 番地 を 返します
+  番地 を 解放する は 「free」 で 無 を 返します
 
-文字列 を 番地 で 低開封する は 整数 の 動作
-道 を pp で 低開封する とは 外部の「sqlite3_open」
-番地 を 低閉鎖する は 整数 の 動作
-db を 低閉鎖する とは 外部の「sqlite3_close_v2」
-番地 を 誤文取得する は 文字列 の 動作
-db を 誤文取得する とは 外部の「sqlite3_errmsg」
-番地 で 文字列 を 番地 に 番地 から 番地 へ 一括実行する は 整数 の 動作
-db で 文 を f に a から e へ 一括実行する とは 外部の「sqlite3_exec」
-番地 を 変更数取得する は 整数 の 動作
-db を 変更数取得する とは 外部の「sqlite3_changes」
-番地 を 行番号取得する は 数 の 動作
-db を 行番号取得する とは 外部の「sqlite3_last_insert_rowid」
+  文字列 を 番地 で 低開封する は 「sqlite3_open」 で 整数 を 返します
+  番地 を 低閉鎖する は 「sqlite3_close_v2」 で 整数 を 返します
+  番地 を 誤文取得する は 「sqlite3_errmsg」 で 文字列 を 返します
+  番地 で 文字列 を 番地 に 番地 から 番地 へ 一括実行する は 「sqlite3_exec」 で 整数 を 返します
+  番地 を 変更数取得する は 「sqlite3_changes」 で 整数 を 返します
+  番地 を 行番号取得する は 「sqlite3_last_insert_rowid」 で 数 を 返します
 
-番地 で 文字列 を 整数 に 番地 から 番地 へ 低準備する は 整数 の 動作
-db で 文 を n に pp から 尾 へ 低準備する とは 外部の「sqlite3_prepare_v2」
-番地 を 低進行する は 整数 の 動作
-st を 低進行する とは 外部の「sqlite3_step」
-番地 を 低終了する は 整数 の 動作
-st を 低終了する とは 外部の「sqlite3_finalize」
+  番地 で 文字列 を 整数 に 番地 から 番地 へ 低準備する は 「sqlite3_prepare_v2」 で 整数 を 返します
+  番地 を 低進行する は 「sqlite3_step」 で 整数 を 返します
+  番地 を 低終了する は 「sqlite3_finalize」 で 整数 を 返します
 
-番地 で 整数 を 数 に 整数結付する は 整数 の 動作
-st で i を x に 整数結付する とは 外部の「sqlite3_bind_int64」
-番地 で 整数 を 小数 に 小数結付する は 整数 の 動作
-st で i を x に 小数結付する とは 外部の「sqlite3_bind_double」
-番地 で 整数 を 文字列 に 整数 から 番地 へ 文字結付する は 整数 の 動作
-st で i を s に n から 後始末 へ 文字結付する とは 外部の「sqlite3_bind_text」
-番地 で 整数 を バイト列 に 整数 から 番地 へ 塊結付する は 整数 の 動作
-st で i を b に n から 後始末 へ 塊結付する とは 外部の「sqlite3_bind_blob」
-番地 で 整数 を 無結付する は 整数 の 動作
-st で i を 無結付する とは 外部の「sqlite3_bind_null」
+  番地 で 整数 を 数 に 整数結付する は 「sqlite3_bind_int64」 で 整数 を 返します
+  番地 で 整数 を 小数 に 小数結付する は 「sqlite3_bind_double」 で 整数 を 返します
+  番地 で 整数 を 文字列 に 整数 から 番地 へ 文字結付する は 「sqlite3_bind_text」 で 整数 を 返します
+  番地 で 整数 を バイト列 に 整数 から 番地 へ 塊結付する は 「sqlite3_bind_blob」 で 整数 を 返します
+  番地 で 整数 を 無結付する は 「sqlite3_bind_null」 で 整数 を 返します
 
-番地 を 列数取得する は 整数 の 動作
-st を 列数取得する とは 外部の「sqlite3_column_count」
-番地 で 整数 を 列型取得する は 整数 の 動作
-st で i を 列型取得する とは 外部の「sqlite3_column_type」
-番地 で 整数 を 列整数取得する は 数 の 動作
-st で i を 列整数取得する とは 外部の「sqlite3_column_int64」
-番地 で 整数 を 列小数取得する は 小数 の 動作
-st で i を 列小数取得する とは 外部の「sqlite3_column_double」
-番地 で 整数 を 列文字取得する は 文字列 の 動作
-st で i を 列文字取得する とは 外部の「sqlite3_column_text」
-番地 で 整数 を 列塊取得する は 番地 の 動作
-st で i を 列塊取得する とは 外部の「sqlite3_column_blob」
-番地 で 整数 を 列長取得する は 整数 の 動作
-st で i を 列長取得する とは 外部の「sqlite3_column_bytes」
-番地 で 整数 を 列名前取得する は 文字列 の 動作
-st で i を 列名前取得する とは 外部の「sqlite3_column_name」
+  番地 を 列数取得する は 「sqlite3_column_count」 で 整数 を 返します
+  番地 で 整数 を 列型取得する は 「sqlite3_column_type」 で 整数 を 返します
+  番地 で 整数 を 列整数取得する は 「sqlite3_column_int64」 で 数 を 返します
+  番地 で 整数 を 列小数取得する は 「sqlite3_column_double」 で 小数 を 返します
+  番地 で 整数 を 列文字取得する は 「sqlite3_column_text」 で 文字列 を 返します
+  番地 で 整数 を 列塊取得する は 「sqlite3_column_blob」 で 番地 を 返します
+  番地 で 整数 を 列長取得する は 「sqlite3_column_bytes」 で 整数 を 返します
+  番地 で 整数 を 列名前取得する は 「sqlite3_column_name」 で 文字列 を 返します
+以上です
 
 # --- 番地の受け取り(sqlite3 ** などの出力の引数) ---
 
