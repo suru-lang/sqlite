@@ -12,7 +12,7 @@
 kumu 追加 github.com/suru-lang/sqlite
 ```
 
-システムに libsqlite3 が要ります(組.suru の `外部依存`。無ければ kumu が入れ方を出して止まります)。
+データベースの層 [「蔵」](https://github.com/suru-lang/db)(suru-lang/db)も依存として一緒に入ります。システムに libsqlite3 が要ります(組.suru の `外部依存`。無ければ kumu が入れ方を出して止まります)。
 
 - macOS: `brew install sqlite` して `export PKG_CONFIG_PATH="$(brew --prefix sqlite)/lib/pkgconfig"`(macOS にも libsqlite3 は入っていますが、kumu が確かめに使う pkg-config の .pc ファイルがありません)
 - Debian・Ubuntu: `sudo apt install libsqlite3-dev`
@@ -36,7 +36,7 @@ kumu 追加 github.com/suru-lang/sqlite
 主処理する
 ```
 
-名前はどれも `SQL` か `SQLite` で始まります。`「SQLite」 を 読み込む` なら `SQLite内のSQLite開封する` のように書きます。例は [例/店.suru](例/店.suru) です。
+名前はどれも `SQL` か `SQLite` で始まります。`「SQLite」 を 読み込む` なら `SQLite内のSQLite開封する` のように書きます。例は [例/店.suru](例/店.suru) です。「蔵」を通して使う例は [例/層.suru](例/層.suru) です。
 
 ## 決めたこと
 
@@ -46,6 +46,7 @@ kumu 追加 github.com/suru-lang/sqlite
 4. **値は「?」に入れる。** `SQLite差込実行する`・`SQLite差込問合する` は、文の「?」に値群(`SQL値` のリスト)を前から順に入れます。SQLite が値として受け取るので、文字列に引用符が入っていても SQL を壊しません。人の入力を SQL に使うときは、文字列を `+` でつながずに、こちらを使います。
 5. **失敗は実行時エラー。** 「SQLite で『SELEC 1』を実行するのに失敗しました(near "SELEC": syntax error)」のように、SQLite の理由を付けた実行時エラーになります(`試行する` で受け止められます)。失敗しても、準備した文は片付けます。
 6. **たくさんの行も読める。** 行は手順の終わりでの繰り返しで集めるので、何千行でも深くなりません。
+7. **「蔵」の駆動 `SQLite駆動`。** `先 を SQLite駆動 で DB開封する`(先 はファイルの道か `「:memory:」`)で、データベースの層「蔵」の関数(`DB実行する`・`DB差込問合する`・`DB行問合する`・`DB取引する` など)から SQLite を使えます。駆動の名前を替えれば、同じプログラムでほかのデータベースを使えます。`DB真偽` は 1 と 0 で入れ、読むと `DB数` になります(`DB真偽取出する` で真偽に戻せます)。値のない `DB実行する` は、`SQLite実行する` と同じく「;」で区切って何文でも書けます。
 
 ## 試験
 
@@ -56,8 +57,6 @@ kumu 点検
 
 ## 今後の候補
 
-- 行を列の名前で引けるようにする(列名と値の組や、「表」で1行を返す問い合わせ)
-- トランザクションを包む関数(手順を渡して、失敗したら ROLLBACK する)
 - 準備した文を何度も使う(同じ INSERT をたくさん行うときに速くする)
 - 「?」のほかに「:名前」の名前つきの差し込み
 - 大きな結果を1行ずつ読む(全部をリストにしないで畳み込む)
