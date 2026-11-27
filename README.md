@@ -52,7 +52,7 @@ Every name starts with `SQL` or `SQLite`. With `「SQLite」 を 読み込む`, 
 
 ## API documentation
 
-The API documentation is made from the comments in `SQLite.suru`: the head comment of the file and the comment right above each public definition, written in English.
+The API documentation is made from the comments in `SQLite.suru`: the head comment of the file and the comment right above each public definition, written in English. It is published at https://suru-lang-sqlite.readthedocs.io/en/latest/.
 
 ```sh
 kumu 文書                                                            # writes docs/api/SQLite.md
