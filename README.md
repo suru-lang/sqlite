@@ -50,6 +50,17 @@ Every name starts with `SQL` or `SQLite`. With `「SQLite」 を 読み込む`, 
 6. **Many rows can be read.** Rows are collected by a loop at the end of a procedure, so thousands of rows don't make it deep.
 7. **The driver `SQLite駆動` for 「蔵」.** `先 を SQLite駆動 で DB開封する` (先 is a file path or `「:memory:」`) lets the functions of the database layer 「蔵」 (`DB実行する`, `DB差込問合する`, `DB行問合する`, `DB取引する` and so on) use SQLite. Changing the driver name lets the same program use another database. `DB真偽` is stored as 1 and 0 and reads back as `DB数` (`DB真偽取出する` turns it back into a truth value). `DB実行する` without values can run any number of statements separated by 「;」, like `SQLite実行する`.
 
+## API documentation
+
+The API documentation is made from the comments in `SQLite.suru`: the head comment of the file and the comment right above each public definition, written in English.
+
+```sh
+kumu 文書                                                            # writes docs/api/SQLite.md
+pip install -r docs/requirements.txt && sphinx-build docs docs/_build   # HTML in docs/_build
+```
+
+`docs/` and `.readthedocs.yaml` were written by `kumu 文書 --雛形` (Suru 0.11.0 or later). On every build, Read the Docs downloads kumu 0.11.0, runs `kumu 文書 --出力 docs/api` and then Sphinx, so the generated pages are not committed. The editor hover shows the same descriptions.
+
 ## Tests
 
 ```sh

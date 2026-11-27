@@ -1,37 +1,28 @@
 # SPDX-License-Identifier: MIT
 # Copyright (c) 2026 sugarsweetrobotics(LICENSE)
-# 「する」の SQLite のライブラリ(libsqlite3 を外部の関数として呼びます)
-# kumu 追加 で依存に足し、使うファイルに 「SQLite」 を 読み込んで 使う と書きます(名前はどれも SQL か SQLite で始まります)。
-# 「SQLite」 を 読み込む なら SQLite内のSQLite開封する のように「SQLite内の」を付けます。
+# SQLite for Suru. It calls libsqlite3 through external functions.
+# Add it as a dependency with `kumu 追加` and write `「SQLite」 を 読み込んで 使う` in your file. Every name starts with `SQL` or `SQLite`.
+# With `「SQLite」 を 読み込む`, add the `SQLite内の` prefix, like `SQLite内のSQLite開封する`.
 #
-# データベースの値は、選択肢のある型 SQL値 です。
-#   SQL無                … NULL
-#   42 の SQL数          … 数(整数なら INTEGER、小数なら REAL)
-#   「a」 の SQL文字列    … TEXT
-#   b の SQLバイト列      … BLOB
+# A database value is the type `SQL値`, which has these forms:
 #
-# どれも動作です。失敗すると「SQLite で『SELEC 1』を実行するのに失敗しました(near "SELEC": syntax error)」
-# のような実行時エラーになります(試行する で受け止められます)。
-#   道 を SQLite開封する                    … ファイルのデータベースを開く(なければ作る)。「:memory:」ならメモリの中
-#   db を SQLite閉鎖する                    … 閉じる
-#   db に 文 を SQLite実行する              … 結果の行のない SQL を実行して、変わった行の数(「;」で区切って何文でも)
-#   db に 文 を 値群 で SQLite差込実行する  … 文の「?」に値群(SQL値 のリスト)を前から順に入れて実行する
-#   db に 文 を SQLite問合する              … SELECT などの結果の行のリスト(1行は SQL値 のリスト)
-#   db に 文 を 値群 で SQLite差込問合する  … 「?」に値群を入れて問い合わせる
-#   db に 文 を SQLite列名取得する          … 結果の列の名前のリスト
-#   db を SQLite最終行番号取得する          … 最後に INSERT した行の rowid
-# 値を見るための純粋な関数:
-#   v を SQL値文字列にする                  … 表示のための文字列(SQL無 は「NULL」)
+# - `SQL無`: NULL.
+# - `42 の SQL数`: a number (INTEGER for an integer, REAL for a decimal).
+# - `「a」 の SQL文字列`: TEXT.
+# - `b の SQLバイト列`: BLOB.
 #
-# データベースの層「蔵」(suru-lang/db)の駆動:
-#   先 を SQLite駆動 で DB開封する          … 「蔵」の関数(DB実行する・DB差込問合する・DB取引する など)で SQLite を使う
-#                                             (DB真偽 は 1 と 0 で入れます)
+# Every function that touches the database is an action. When it fails, it is a runtime error such as
+# 「SQLite で『SELEC 1』を実行するのに失敗しました(near "SELEC": syntax error)」, which `試行する` can catch.
+#
+# `SQLite駆動` is the driver for the database layer 「蔵」 (suru-lang/db): `先 を SQLite駆動 で DB開封する` lets you use SQLite through the functions of 「蔵」 (`DB実行する`, `DB差込問合する`, `DB取引する` and so on). `DB真偽` is stored as 1 and 0.
 外部の「sqlite3」 を 読み込む
 外部の「c」 を 読み込む
 「標準」 を 読み込んで 使う
 「蔵」 を 読み込んで 使う
 
+# A value in the database: `SQL無` (NULL), `SQL数` (INTEGER or REAL), `SQL文字列` (TEXT) or `SQLバイト列` (BLOB).
 SQL値 とは SQL無 か SQL数値 の SQL数 か SQL文字値 の SQL文字列 か SQLバイト値 の SQLバイト列
+# An open database: the C handle and the path it was opened with.
 SQLite接続 とは SQLite場所 と SQLite道 の 組
 
 # --- C の関数 ---
@@ -103,6 +94,7 @@ db で 何 を r に 結果確認する とは
 
 # --- 開く・閉じる ---
 
+# Opens the database file at 道, creating it when it does not exist. 「:memory:」 opens a database in memory.
 文字列 を SQLite開封する は SQLite接続 の 動作
 道 を SQLite開封する とは 以下の手順です
   pp とは 8 を 確保した 結果
@@ -120,11 +112,13 @@ db から 道 を 開封失敗する とは 以下の手順です
   （「SQLite で『」 + 道 + 「』を開くのに失敗しました(」 + m + 「)」） を 失敗する
   以上です
 
+# Closes the database.
 SQLite接続 を SQLite閉鎖する は 数 の 動作
 c を SQLite閉鎖する とは c の SQLite場所 を 低閉鎖する
 
 # --- 行のない SQL ---
 
+# Runs SQL that returns no rows and gives the number of changed rows. Several statements can be separated by 「;」.
 SQLite接続 に 文字列 を SQLite実行する は 数 の 動作
 c に 文 を SQLite実行する とは 以下の手順です
   db とは c の SQLite場所
@@ -133,6 +127,7 @@ c に 文 を SQLite実行する とは 以下の手順です
   db を 変更数取得してから 結果にする
   以上です
 
+# The rowid of the last row inserted.
 SQLite接続 を SQLite最終行番号取得する は 数 の 動作
 c を SQLite最終行番号取得する とは c の SQLite場所 を 行番号取得する
 
@@ -186,6 +181,7 @@ st で i を （b の SQLバイト列） に 値結付する とは st で i を
 
 # --- 実行と問い合わせ ---
 
+# Runs the statement with the values (a list of `SQL値`) put into its 「?」 placeholders in order, and gives the number of changed rows.
 SQLite接続 に 文字列 を SQL値 の リスト で SQLite差込実行する は 数 の 動作
 c に 文 を 値群 で SQLite差込実行する とは 以下の手順です
   db とは c の SQLite場所
@@ -249,6 +245,7 @@ st を 蓄 から 読取終了する とは 以下の手順です
   蓄 を 逆順にして 結果にする
   以上です
 
+# Runs a query with the values put into its 「?」 placeholders, and gives the rows (each row is a list of `SQL値`).
 SQLite接続 に 文字列 を SQL値 の リスト で SQLite差込問合する は SQL値 の リスト の リスト の 動作
 c に 文 を 値群 で SQLite差込問合する とは 以下の手順です
   db とは c の SQLite場所
@@ -256,9 +253,11 @@ c に 文 を 値群 で SQLite差込問合する とは 以下の手順です
   db に st を 文 で 空 から 行群読取する
   以上です
 
+# The rows of a query such as SELECT (each row is a list of `SQL値`).
 SQLite接続 に 文字列 を SQLite問合する は SQL値 の リスト の リスト の 動作
 c に 文 を SQLite問合する とは c に 文 を 空 で SQLite差込問合する
 
+# The names of the result columns of the statement.
 SQLite接続 に 文字列 を SQLite列名取得する は 文字列 の リスト の 動作
 c に 文 を SQLite列名取得する とは 以下の手順です
   st とは c の SQLite場所 に 文 を 空 で 文準備した 結果
@@ -280,6 +279,7 @@ st を i で 蓄 に 一列名取得する とは 以下の手順です
 
 # --- 値を見る ---
 
+# A string for showing the value (「NULL」 for `SQL無`).
 SQL値 を SQL値文字列にする は 文字列
 SQL無 を SQL値文字列にする とは 「NULL」
 （n の SQL数） を SQL値文字列にする とは n を 文字列化する
@@ -288,6 +288,7 @@ SQL無 を SQL値文字列にする とは 「NULL」
 
 # --- 「蔵」の駆動 ---
 
+# The driver for 「蔵」 (suru-lang/db). Use it as `先 を SQLite駆動 で DB開封する`.
 SQLite駆動 とは 「SQLite」 と 駆動開封すること の DB駆動
 
 文字列 を 駆動開封する は DB接続 を 返す 入出力動作
