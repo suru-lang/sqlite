@@ -52,7 +52,7 @@ kumu 追加 github.com/suru-lang/sqlite
 
 ## API ドキュメント
 
-API ドキュメントは `SQLite.suru` の注釈から作ります。ファイルの頭の注釈と、公開の定義のすぐ上の注釈で、英語で書いています。
+API ドキュメントは `SQLite.suru` の注釈から作ります。ファイルの頭の注釈と、公開の定義のすぐ上の注釈で、英語で書いています。公開先は https://suru-lang-sqlite.readthedocs.io/en/latest/ です。
 
 ```sh
 kumu 文書                                                            # docs/api/SQLite.md を書く
