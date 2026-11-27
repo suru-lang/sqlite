@@ -50,6 +50,17 @@ kumu 追加 github.com/suru-lang/sqlite
 6. **たくさんの行も読める。** 行は手順の終わりでの繰り返しで集めるので、何千行でも深くなりません。
 7. **「蔵」の駆動 `SQLite駆動`。** `先 を SQLite駆動 で DB開封する`(先 はファイルの道か `「:memory:」`)で、データベースの層「蔵」の関数(`DB実行する`・`DB差込問合する`・`DB行問合する`・`DB取引する` など)から SQLite を使えます。駆動の名前を替えれば、同じプログラムでほかのデータベースを使えます。`DB真偽` は 1 と 0 で入れ、読むと `DB数` になります(`DB真偽取出する` で真偽に戻せます)。値のない `DB実行する` は、`SQLite実行する` と同じく「;」で区切って何文でも書けます。
 
+## API ドキュメント
+
+API ドキュメントは `SQLite.suru` の注釈から作ります。ファイルの頭の注釈と、公開の定義のすぐ上の注釈で、英語で書いています。
+
+```sh
+kumu 文書                                                            # docs/api/SQLite.md を書く
+pip install -r docs/requirements.txt && sphinx-build docs docs/_build   # docs/_build に HTML
+```
+
+`docs/` と `.readthedocs.yaml` は `kumu 文書 --雛形`(する 0.11.0 以上)で書きました。Read the Docs はビルドのたびに kumu 0.11.0 を取ってきて `kumu 文書 --出力 docs/api` を動かしてから Sphinx を動かすので、作ったページはコミットしません。エディタのホバーにも同じ説明が出ます。
+
 ## 試験
 
 ```sh
